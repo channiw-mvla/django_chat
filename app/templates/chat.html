@@ -1,0 +1,486 @@
+{% load socialaccount %}
+{% load static %}
+<style>
+    .container{max-width:1170px; margin:auto;}
+img{ max-width:100%;}
+.inbox_people {
+  background: #f8f8f8 none repeat scroll 0 0;
+  float: left;
+  overflow: hidden;
+  width: 40%; border-right:1px solid #c4c4c4;
+}
+.inbox_msg {
+  border: 1px solid #c4c4c4;
+  clear: both;
+  overflow: hidden;
+}
+.top_spac{ margin: 20px 0 0;}
+
+
+.recent_heading {float: left; width:40%;}
+.srch_bar {
+  display: inline-block;
+  text-align: right;
+  width: 60%;
+
+}
+
+.inline {
+   display:inline-block;
+   margin-right:10px;
+   text-align: center;
+}
+
+.btn_bar {
+  display: inline-block;
+  text-align: center;
+  width: 50%;
+}
+.headind_srch{ padding:10px 29px 10px 20px; overflow:hidden; border-bottom:1px solid #c4c4c4;}
+
+.recent_heading h4 {
+  color: #05728f;
+  font-size: 25px;
+  margin: auto;
+}
+.srch_bar input{ border:1px solid #cdcdcd; border-width:0 0 1px 0; width:80%; padding:2px 0 4px 6px; background:none;}
+.srch_bar .input-group-addon button {
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border: medium none;
+  padding: 0;
+  color: #707070;
+  font-size: 18px;
+}
+.srch_bar .input-group-addon { margin: 0 0 0 -27px;}
+
+.chat_ib h5{ font-size:15px; color:#464646; margin:0 0 8px 0;}
+.chat_ib h5 span{ font-size:13px; float:right;}
+.chat_ib p{ font-size:14px; color:#989898; margin:auto}
+.chat_img {
+  float: left;
+  width: 11%;
+}
+.chat_ib {
+  float: left;
+  padding: 0 0 0 15px;
+  width: 88%;
+}
+
+.chat_people{ overflow:hidden; clear:both;}
+.chat_list {
+  border-bottom: 1px solid #c4c4c4;
+  margin: 0;
+  padding: 18px 16px 10px;
+}
+.inbox_chat { height: 650px; overflow-y: scroll;}
+
+.active_chat{ background:#ebebeb;}
+
+.incoming_msg_img {
+  display: inline-block;
+  width: 6%;
+}
+.received_msg {
+  display: inline-block;
+  padding: 0 0 0 10px;
+  vertical-align: top;
+  width: 92%;
+ }
+ .received_withd_msg p {
+  background: #ebebeb none repeat scroll 0 0;
+  border-radius: 3px;
+  color: #646464;
+  font-size: 14px;
+  margin: 0;
+  padding: 5px 10px 5px 12px;
+  width: 100%;
+}
+.time_date {
+  color: #747474;
+  display: block;
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+.received_withd_msg { width: 57%;}
+.mesgs {
+  float: left;
+  padding: 30px 15px 0 25px;
+  width: 60%;
+}
+
+ .sent_msg p {
+  background: #05728f none repeat scroll 0 0;
+  border-radius: 3px;
+  font-size: 14px;
+  margin: 0; color:#fff;
+  padding: 5px 10px 5px 12px;
+  width:100%;
+}
+.outgoing_msg{ overflow:hidden; margin:26px 0 26px;}
+.sent_msg {
+  float: right;
+  width: 46%;
+}
+.input_msg_write input {
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  border: medium none;
+  color: #4c4c4c;
+  font-size: 15px;
+  min-height: 48px;
+  width: 100%;
+}
+
+.type_msg {border-top: 1px solid #c4c4c4;position: relative;}
+.msg_send_btn {
+  background: #05728f none repeat scroll 0 0;
+  border: medium none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  font-size: 17px;
+  height: 33px;
+  position: absolute;
+  right: 0;
+  top: 11px;
+  width: 33px;
+}
+
+.upload_img {
+  cursor: pointer;
+  font-size: 17px;
+  height: 35px;
+  position: absolute;
+  right: 35;
+  bottom: -2px;
+  width: 33px;
+}
+
+.messaging { padding: 0 0 50px 0;}
+.msg_history {
+  height: 616px;
+  overflow-y: auto;
+}
+
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 200px;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+.image-upload>input {
+  display: none;
+}
+</style>
+<script>
+  function openForm() {
+    document.getElementById("myForm").style.display = "block";
+    document.getElementById("chatForm").style.display = "none";
+  }
+
+  function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+  }
+
+  function openChatForm() {
+    document.getElementById("chatForm").style.display = "block";
+    document.getElementById("myForm").style.display = "none";
+  }
+
+  function closeChatForm() {
+    document.getElementById("chatForm").style.display = "none";
+  }
+</script>
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
+ <meta http-equiv="refresh" content="60" />
+<!------ Include the above in your HEAD tag ---------->
+{% load i18n %}
+
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <a class="navbar-brand">Chat Application</a>
+    {% if user.is_authenticated %}
+    <form class="form-inline" method="post" action="{% url 'account_logout' %}">
+      {% csrf_token %}
+        <a class="navbar-brand my-2 my-sm-0">{{ user.first_name }}</a>
+        <button class="btn btn-secondary" type="submit"> Logout </button>
+    </form>
+    {% else %}
+        <meta http-equiv="REFRESH" content="0;url={% url 'index' %}">
+    {% endif %}
+</nav>
+
+<html>
+<head>
+
+
+</head>
+<body>
+
+<div class="container">
+<h3 class=" text-center">Messaging</h3>
+<div class="form-popup" id="myForm">
+  <form action="{% url 'chat:create_group'%}" method="post" class="form-container">
+     {% csrf_token %}
+    <h4>Create Group</h4>
+
+    <label for="gname"><b>Group Name</b></label>
+    <input type="text" placeholder="Enter Group Name" name="gname" required>
+
+    <button type="submit" class="btn">Create</button>
+  </form>
+  <div class="type_msg"></div>
+  <form action="{% url 'chat:join_group'%}" method="post" class="form-container">
+    {% csrf_token %}
+    <h4>Join Group</h4>
+    <label for="code"><b>Group Code</b></label>
+    <input type="text" placeholder="Enter code" name="code" required>
+
+    <button type="submit" class="btn">Join</button>
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
+</div>
+
+  <div class="form-popup" id="chatForm">
+  <form action="{% url 'chat:create_chat'%}" method="post" class="form-container">
+     {% csrf_token %}
+    <h4> Start Chat</h4>
+    <label for="username">Select User:</label>
+    <select class="form-control" name="username" id="username">
+      {% for user in users %}
+        <option value="{{user.username}}">{{user.username}}</option>
+      {% endfor %}
+    </select>
+    <input type="text" placeholder="Enter Start Message" name="message" required>
+    <button type="submit" class="btn">Start Chat</button>
+    <button type="button" class="btn cancel" onclick="closeChatForm()">Close</button>
+  </form>
+  <div class="type_msg"></div>
+</div>
+
+<div class="messaging">
+      <div class="inbox_msg">
+        <div class="inbox_people">
+          <div class="headind_srch">
+            <div class="recent_heading">
+              <h4>Recent</h4>
+            </div>
+            <button type="button" onclick="openForm()" class="inline btn btn-secondary btn-sm" id="slide_stop_button"  value="Stop"> Create/Join Group </button>
+            <button type="button" onclick="openChatForm()" class="inline btn btn-secondary btn-sm" id="slide_start_button" value="Start"> New Chat </button>
+          </div>
+          <div class="inbox_chat">
+            <a>
+              <div class="chat_list">
+                <div class="chat_people">
+                <div class="chat_ib">
+                  <h5>Direct Messages<span class="chat_date"></span></h5>
+                    <a> </a>
+                  </div>
+                </div>
+              </div>
+            </a>
+            {% for key, values in data.items %}
+              {% ifnotequal key 'user' %}
+                <a href="{% url 'chat:chat' key %}">
+                  {% if key == data.user.name %}
+                    <div class="chat_list active_chat">
+                  {%else%}
+                    <div class="chat_list">
+                  {% endif %}
+                    <div class="chat_people">
+                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                    <div class="chat_ib">
+                      <h5>{{key}} <span class="chat_date">{{values.messages.0.date}}</span></h5>
+                      <a></a>
+                      <p>{{values.messages.0.message}}</p>
+                    </div>
+                  </div>
+                </div>
+                </a>
+              {% endifnotequal %}
+            <br>
+            {% endfor %}
+              <a>
+                <div class="chat_list">
+                  <div class="chat_people">
+                  <div class="chat_ib">
+                    <h5>Group Messages<span class="chat_date"></span></h5>
+                      <a> </a>
+                    </div>
+                  </div>
+                </div>
+              </a>
+             {% for value in groups %}
+              <a href="{% url 'chat:chat' value.key %}">
+                  <div class="chat_list">
+                    <div class="chat_people">
+                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="image"> </div>
+                    <div class="chat_ib">
+                      <h5>{{value.name}} <span class="chat_date"></span></h5>
+                      <a> Invite code: {{value.key}} </a>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="mesgs">
+          <div class="msg_history">
+            {% for message in data.user.messages %}
+              {% if message.self %}
+              <div class="incoming_msg">
+                <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                <div class="received_msg">
+                  <div class="received_withd_msg">
+                    {% if "http" in message.message %}
+                        <p> <a href="{{message.message}}"> {{message.fileName}}</a> </p>
+                    {% else %}
+                      <p>{{message.message}}</p>
+                    {% endif %}
+                    <span class="time_date"> {{message.time}} | {{message.date}}</span></div>
+                </div>
+              </div>
+              {% else %}
+              <div class="outgoing_msg">
+                <div class="sent_msg">
+                    {% if "http" in message.message %}
+                      <p> <a href="{{message.message}}"> {{message.fileName}} </a> </p>
+                    {% else %}
+                      <p>{{message.message}}</p>
+                    {% endif %}
+                  <span class="time_date"> {{message.time}} | {{message.date}} | {{data.user.name}}</span> </div>
+              </div>
+              {% endif %}
+            {% endfor %}
+
+
+          {% for message in group_chats.messages %}
+            {% if message.sender == user.username %}
+            <div class="incoming_msg">
+              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="image"> </div>
+              <div class="received_msg">
+                <div class="received_withd_msg">
+                  {% if "http" in message.message %}
+                      <p> <a href="{{message.message}}"> {{message.fileName}} </a> </p>
+                    {% else %}
+                      <p>{{message.message}}</p>
+                    {% endif %}
+                  <span class="time_date"> {{message.time}} | {{message.date}} | You </span></div>
+              </div>
+            </div>
+            {% else %}
+            <div class="outgoing_msg">
+              <div class="sent_msg">
+                {% if "http" in message.message %}
+                  <p> <a href="{{message.message}}"> {{message.fileName}} </a> </p>
+                {% else %}
+                  <p>{{message.message}}</p>
+                {% endif %}
+                <span class="time_date"> {{message.time}} | {{message.date}} | {{message.sender}}</span> </div>
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+          {% if data.user.name %}
+            <form action="{% url 'chat:send_message' data.user.name %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="type_msg">
+                <div class="input_msg_write">
+                  <input type="text" class="write_msg" name="message" placeholder="Type a message" />
+                  <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                  <div class="image-upload upload_img">
+                    <label for="file-input">
+                      <img src="{% static 'upload.png' %}"/>
+                    </label>
+                    <input id="file-input" type="file" name="file" />
+                  </div>
+                </div>
+              </div>
+            </form>
+          {% endif %}
+          {% if group_chats.key %}
+            <form action="{% url 'chat:send_group_message' group_chats.key %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="type_msg">
+                <div class="input_msg_write">
+                  <input type="text" class="write_msg" name="message" placeholder="Type a message" />
+                  <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                  <div class="image-upload upload_img">
+                    <label for="file-group-input">
+                      <img src="{% static 'upload.png' %}"/>
+                    </label>
+                    <input id="file-group-input" type="file" name="file" />
+                  </div>
+                </div>
+              </div>
+            </form>
+          {% endif %}
+
+    </div>
+    </body>
+    </html>
